@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Smishing Detection Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body {
+background: black;
+color: cyan;
+font-family: monospace;
+margin: 0;
+}
+
+/* Layout */
+
+.dashboard {
+
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 20px;
+padding: 20px;
+
+}
+
+/* Panels */
+
+.panel {
+
+border: 2px solid cyan;
+padding: 20px;
+
+box-shadow:
+0 0 10px cyan,
+0 0 20px cyan;
+
+}
+
+.title {
+
+text-align: center;
+font-size: 24px;
+
+}
+
+/* Textarea */
+
+textarea {
+
+width: 100%;
+height: 120px;
+
+background: black;
+color: cyan;
+
+border: 1px solid cyan;
+
+}
+
+/* Button */
+
+button {
+
+margin-top: 10px;
+
+padding: 10px 20px;
+
+background: black;
+
+color: cyan;
+
+border: 1px solid cyan;
+
+cursor: pointer;
+
+}
+
+button:hover {
+
+box-shadow:
+0 0 10px cyan,
+0 0 20px cyan;
+
+}
+
+.result {
+
+margin-top: 15px;
+font-size: 20px;
+
+}
+
+.news-item {
+
+margin-bottom: 10px;
+
+border-bottom: 1px solid cyan;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<!-- Analyzer -->
+
+<div class="panel">
+
+<div class="title">
+📱 Smishing Detection Analyzer
+</div>
+
+<textarea id="message"
+placeholder="Paste suspicious SMS here"></textarea>
+
+<button onclick="analyzeMessage()">
+Analyze Message
+</button>
+
+<div id="result"
+class="result"></div>
+
+</div>
+
+<!-- Graph -->
+
+<div class="panel">
+
+<div class="title">
+📊 Risk Statistics
+</div>
+
+<canvas id="riskChart"></canvas>
+
+</div>
+
+<!-- News -->
+
+<div class="panel">
+
+<div class="title">
+📰 Cyber Smishing News
+</div>
+
+<div class="news-item">
+⚠️ Fake bank SMS scams increased globally
+</div>
+
+<div class="news-item">
+📱 OTP phishing attacks rising worldwide
+</div>
+
+<div class="news-item">
+🚨 Delivery scam SMS campaigns detected
+</div>
+
+<div class="news-item">
+🔐 Lottery fraud messages spreading
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* Detection Logic */
+
+function analyzeSMS(message) {
+
+let riskScore = 0;
+
+const keywords = [
+"urgent",
+"won",
+"winner",
+"free",
+"verify",
+"click",
+"account",
+"bank",
+"suspended",
+"lottery",
+"claim"
+];
+
+const lower = message.toLowerCase();
+
+keywords.forEach(word => {
+
+if (lower.includes(word)) {
+
+riskScore += 2;
+
+}
+
+});
+
+const suspiciousTLDs = [
+".xyz",
+".top",
+".gq",
+".tk",
+".verify",
+".ru"
+];
+
+suspiciousTLDs.forEach(tld => {
+
+if (lower.includes(tld)) {
+
+riskScore += 4;
+
+}
+
+});
+
+if (lower.includes("http")) {
+
+riskScore += 3;
+
+}
+
+/* Classification */
+
+if (riskScore <= 3)
+return "Secure";
+
+else if (riskScore <= 7)
+return "Suspicious";
+
+else
+return "Fraudulent";
+
+}
+
+/* Chart Setup */
+
+let safeCount = 0;
+let suspiciousCount = 0;
+let fraudCount = 0;
+
+const ctx =
+document.getElementById('riskChart');
+
+const riskChart =
+new Chart(ctx, {
+
+type: 'bar',
+
+data: {
+
+labels: ["Secure","Suspicious","Fraudulent"],
+
+datasets: [{
+
+label: "Message Risk Distribution",
+
+data: [0,0,0]
+
+}]
+
+}
+
+});
+
+/* Analyze Button */
+
+function analyzeMessage() {
+
+const message =
+document.getElementById("message").value;
+
+const riskLevel =
+analyzeSMS(message);
+
+const resultDiv =
+document.getElementById("result");
+
+resultDiv.innerHTML =
+`Risk Level: ${riskLevel}`;
+
+/* Color */
+
+if (riskLevel === "Fraudulent") {
+
+resultDiv.style.color = "red";
+
+fraudCount++;
+
+alert("⚠️ FRAUDULENT MESSAGE DETECTED");
+
+}
+
+else if (riskLevel === "Suspicious") {
+
+resultDiv.style.color = "yellow";
+
+suspiciousCount++;
+
+}
+
+else {
+
+resultDiv.style.color = "lime";
+
+safeCount++;
+
+}
+
+/* Update Graph */
+
+riskChart.data.datasets[0].data =
+[safeCount,suspiciousCount,fraudCount];
+
+riskChart.update();
+
+}
+
+</script>
+
+</body>
+
+</html>
