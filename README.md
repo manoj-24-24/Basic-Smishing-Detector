@@ -28,9 +28,3 @@ https://manoj-24-24.github.io/Basic-Smishing-Detector/
 
 ---
 
-## 🚀 How to Run Locally
-
-1. Download or clone the repository:
-
-```bash
-git clone https://github.com/YOUR_USERNAME/smishing-detector-dashboard.git
