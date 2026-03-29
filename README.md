@@ -3,7 +3,7 @@
 A simple cybersecurity dashboard that detects **smishing (SMS phishing)** messages and classifies them as **Secure, Suspicious, or Fraudulent**.
 
 🌍 **Live Demo:**  
-https://YOUR_USERNAME.github.io/smishing-detector-dashboard/
+
 
 ---
 
